@@ -1,5 +1,16 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+**/node_modules/
+**/Debug/
+/clientapp/.vs/
+Release/
+release/
+Debug/
+debug/
+obj/
+*.ncb
+*.user
+*.suo
+*.aps
 
