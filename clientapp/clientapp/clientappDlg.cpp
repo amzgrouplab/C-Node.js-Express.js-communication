@@ -9,6 +9,9 @@
 #include "afxdialogex.h"
 #include <afxwin.h> 
 #include <string>
+#include <iostream>
+#include <ctime>
+#include <iomanip>
 
 #define _USE_WIHTTP_INTERFACE
 
@@ -72,7 +75,7 @@ BEGIN_MESSAGE_MAP(CclientappDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &CclientappDlg::OnBnClickedBtnSendPostRequest)
+	ON_BN_CLICKED(IDC_BUTTON1, &CclientappDlg::OnBnClickedBtnSendLicenseInfo)
 END_MESSAGE_MAP()
 
 
@@ -162,16 +165,48 @@ HCURSOR CclientappDlg::OnQueryDragIcon()
 }
 
 
+std::string getCurrentTime() {
+	std::time_t currentTime = std::time(nullptr);
+	struct tm timeInfo;
 
-void post_test()
-{
+	// Use localtime_s to get the local time
+	localtime_s(&timeInfo, &currentTime);
+
+	char timeBuffer[20]; // Buffer to hold the formatted time string
+	strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", &timeInfo); // Format the time
+	return timeBuffer;
+}
+
+std::string getLicense() {
+	return "4FG45S04JD";
+}
+void postLicenseInfo() {
 	RestClient::Request request;
 	request.timeout = 3000;
 	request.followRedirects = false;
 	request.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
 	request.headers["Cookie"] = "name=value;";
+	std::string start_date = "2023-06-05";//change start date of license
+	std::string end_date = "2023-09-05";// change end date of license
+	std::string cur_time = getCurrentTime();
+	std::string license = getLicense();
 
-	RestClient::Response response = RestClient::post("http://localhost:3000/receive-json", "text/json", "{\"foo\": \"bla\"}", &request);
+	std::string start_date_key = "start_date";
+	std::string end_date_key = "end_date";
+	std::string cur_time_key = "cur_time";
+	std::string license_key = "license";
+
+	std::string json_data = "{\"start_date\": \"" + start_date + "\"}";
+
+	// Append the new key-value pairs to the JSON string
+	json_data = "{\"" + start_date_key + "\": \"" + start_date
+		+ "\", \"" + end_date_key + "\": \"" + end_date
+		+ "\", \"" + cur_time_key + "\": \"" + cur_time
+		+ "\", \"" + license_key + "\": \"" + license
+		+ "\"}";
+
+
+	RestClient::Response response = RestClient::post("http://localhost:3000/license", "application/json", json_data, &request);
 
 	CString myCString(response.body.c_str());
 
@@ -184,10 +219,9 @@ void post_test()
 	}
 }
 
-
-void CclientappDlg::OnBnClickedBtnSendPostRequest()
+void CclientappDlg::OnBnClickedBtnSendLicenseInfo()
 {
 	// TODO: Add your control notification handler code here
 	//get_test();
-	post_test();
+	postLicenseInfo();
 }
