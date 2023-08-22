@@ -6,7 +6,7 @@ app.use(express.json());
 
 app.post('/license', (req, res) => {
   const receivedData = req.body;
-  // Process receivedData
+  // Process receivedDatacd 
   console.log('Received license info:', receivedData);
   res.json({ message: 'Data received successfully' });
 });
