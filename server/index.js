@@ -4,10 +4,10 @@ const PORT = 3000;
 
 app.use(express.json());
 
-app.post('/receive-json', (req, res) => {
+app.post('/license', (req, res) => {
   const receivedData = req.body;
   // Process receivedData
-  console.log('Received JSON data:', receivedData);
+  console.log('Received license info:', receivedData);
   res.json({ message: 'Data received successfully' });
 });
 
